@@ -1,22 +1,21 @@
 import requests
-import pandas as pd
 import paho.mqtt.client as mqtt #import the client1
 import random
 import time
-
+import datetime
 from paho.mqtt import client as mqtt_client
 
 
-link = "http://www.wapda.gov.pk/index.php/river-flow-data"
-dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
-Indus_inflow = dfs[0][1]
+# link = "http://www.wapda.gov.pk/index.php/river-flow-data"
+# dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
+# Indus_inflow = dfs[0][1]
 
-columns = ['Date', 'Indus at Tarbela Level (ft)', 'Indus at Tarbela Inflow (cfs)',
-           'Indus at Tarbela Outflow (cfs)', 'Kabul at Nowshera Inflow (cfs)',
-           'Jhelum at Mangla Level (ft)', 'Jhelum at Mangla Inflow (cfs)',
-           'Jhelum at Mangla Outflow (cfs)', 'Chenab at Marala Inflow (cfs)',
-           'Total Inflow Current Year (cfs)', 'Total Inflow Last Year (cfs)',
-           'Total Inflow Average Last 10 Years (cfs)']
+# columns = ['Date', 'Indus at Tarbela Level (ft)', 'Indus at Tarbela Inflow (cfs)',
+#            'Indus at Tarbela Outflow (cfs)', 'Kabul at Nowshera Inflow (cfs)',
+#            'Jhelum at Mangla Level (ft)', 'Jhelum at Mangla Inflow (cfs)',
+#            'Jhelum at Mangla Outflow (cfs)', 'Chenab at Marala Inflow (cfs)',
+#            'Total Inflow Current Year (cfs)', 'Total Inflow Last Year (cfs)',
+#            'Total Inflow Average Last 10 Years (cfs)']
 
 
 broker = 'localhost'
@@ -27,6 +26,7 @@ client_id = f'python-mqtt-{random.randint(0, 1000)}'
 username = 'emqx'
 password = 'public'
 
+flood_chance = 0.2
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
@@ -45,8 +45,10 @@ def publish(client):
     msg_count = 0
     for i in Indus_inflow:
         #time.sleep(1)
+        if random.uniform(0,1) <= flood_chance:
+            val = i + 1000
         msg = f"messages: {msg_count}"
-        result = client.publish("Indus/level/sensor1", i)
+        result = client.publish("Indus/level/sensor1", val)
         # result: [0, 1]
         status = result[0]
         if status == 0:

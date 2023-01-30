@@ -1,47 +1,40 @@
 import paho.mqtt.client as mqtt #import the client1
 import time
 Data = []
-# def on_message(client, userdata, message):
-#     print("message received " ,str(message.payload.decode("utf-8")))
-#     print("message topic=",message.topic)
-#     print("message qos=",message.qos)
-#     print("message retain flag=",message.retain)
-
-# broker_address="localhost"
-# client = mqtt.Client("P1")
-#
-# client.on_message=on_message
-# client.connect(broker_address) #connect to broker
-# client.loop_start()
-# client.subscribe("Indus/inflow/sensor1")
-# publish()
-# client.loop_stop()
-
-# def on_message(client, userdata, message):
-#     print("message received " ,str(message.payload.decode("utf-8")))
-#     print("message topic=",message.topic)
-#     print("message qos=",message.qos)
-#     print("message retain flag=",message.retain)
-# ########################################
-# broker_address="localhost"
-# client = mqtt.Client("P1") #create new instance
-# client.on_message=on_message #attach function to callback
-# client.connect(broker_address) #connect to broker
-# client.loop_start() #start the loop
-# client.subscribe("Indus/inflow/sensor1")
-# publish()
-# #print("message received ", str(client.on_message.payload.decode("utf-8")))
-# time.sleep(4) # wait
-# python3.6
-
+import influxdb_client, os, time
+from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client.client.write_api import SYNCHRONOUS
+from datetime import datetime
 import random
-
 from paho.mqtt import client as mqtt_client
-
 import csv
 
-f = open('C:/Users/Tasbiha/Iot/rawdata.csv', 'a', newline='')
-writer = csv.writer(f)
+token_="GtEeLWZqA42o88CVxUQg2dvBqTduZuC-NXgBVMwqZX7pce1bWhmQzMEO8woGOpPdh1wWqWZBo4Jz0U-JhpxHnQ=="
+org_="anelyamend@gmail.com"
+url_="https://us-east-1-1.aws.cloud2.influxdata.com"
+
+# token_ = 'skVO0ckLCISprVeTI43CrtXCk1NSoJmlGQlN_X1FfpzOJ48c5JTatF4Tb3p-sRYtkaJ52vjFKCqcI5wrrpqGAg=='
+# org_ = "robelamare20@gmail.com"
+# url_ = "https://eu-central-1-1.aws.cloud2.influxdata.com"
+
+
+client = influxdb_client.InfluxDBClient(url=url_, token=token_, org=org_)
+
+measurements = ['inflow', 'outflow', 'level']
+data = [
+    {
+"measurement": measurements[0],"tags": {"host": "server01"},"fields": {"value": 100}},
+{
+"measurement": measurements[1],"tags": {"host": "server01"},"fields": {"value": 100}},
+{
+"measurement": measurements[2],"tags": {"host": "server01"},"fields": {"value": 100}},
+]
+bucket1 = 'indus'
+bucket2 = 'jehlum'
+write_api = client.write_api(write_options=SYNCHRONOUS)
+
+# f = open('C:/Users/Tasbiha/Iot/rawdata.csv', 'a', newline='')
+# writer = csv.writer(f)
 
 # broker = 'broker.emqx.io'
 broker="localhost"
@@ -70,7 +63,29 @@ def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         #Data.append((msg.payload.decode(), msg.topic))
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-        writer.writerow((msg.topic, msg.payload))
+
+        m = msg.topic
+        arr = m.split("/")
+        sen_name = arr[1]+"_"+arr[2]
+        point = (
+            Point(arr[1])
+            .tag("sensor name", sen_name)
+            .field("value", float(msg.payload.decode()))
+        )
+
+        # point = (
+        #     Point(arr[0])
+        #     .tag("location", arr[2])
+        #     .field(arr[1], )
+        # )
+        # print(point)
+        '''FOR INDUS'''
+        if arr[0] == "Indus":
+            write_api.write(bucket=bucket1, org=org_, record=point)
+        '''FOR JEHLUM'''
+        if arr[0] == "Jehlum":
+            write_api.write(bucket=bucket2, org=org_, record=point)
+        # writer.writerow((msg.topi, msg.payload.decode()))
         #print(Data)
 
     client.subscribe("Indus/inflow/sensor1")
@@ -84,9 +99,7 @@ def subscribe(client: mqtt_client):
 
 def run():
     client = connect_mqtt()
-    time.sleep(4)
     subscribe(client)
-    time.sleep(4)
     client.loop_forever()
 
 

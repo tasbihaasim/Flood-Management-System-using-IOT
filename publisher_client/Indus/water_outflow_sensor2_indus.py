@@ -1,22 +1,21 @@
 import requests
-import pandas as pd
 import paho.mqtt.client as mqtt #import the client1
 import random
 import time
-
+import datetime
 from paho.mqtt import client as mqtt_client
 
 
-link = "http://www.wapda.gov.pk/index.php/river-flow-data"
-dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
-Indus_inflow = dfs[0][3]
+# link = "http://www.wapda.gov.pk/index.php/river-flow-data"
+# dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
+# Indus_inflow = dfs[0][3]
 
-columns = ['Date', 'Indus at Tarbela Level (ft)', 'Indus at Tarbela Inflow (cfs)',
-           'Indus at Tarbela Outflow (cfs)', 'Kabul at Nowshera Inflow (cfs)',
-           'Jhelum at Mangla Level (ft)', 'Jhelum at Mangla Inflow (cfs)',
-           'Jhelum at Mangla Outflow (cfs)', 'Chenab at Marala Inflow (cfs)',
-           'Total Inflow Current Year (cfs)', 'Total Inflow Last Year (cfs)',
-           'Total Inflow Average Last 10 Years (cfs)']
+# columns = ['Date', 'Indus at Tarbela Level (ft)', 'Indus at Tarbela Inflow (cfs)',
+#            'Indus at Tarbela Outflow (cfs)', 'Kabul at Nowshera Inflow (cfs)',
+#            'Jhelum at Mangla Level (ft)', 'Jhelum at Mangla Inflow (cfs)',
+#            'Jhelum at Mangla Outflow (cfs)', 'Chenab at Marala Inflow (cfs)',
+#            'Total Inflow Current Year (cfs)', 'Total Inflow Last Year (cfs)',
+#            'Total Inflow Average Last 10 Years (cfs)']
 
 
 broker = 'localhost'
@@ -40,13 +39,22 @@ def connect_mqtt():
     client.connect(broker, port)
     return client
 
-
+flood_chance = 0.2
 def publish(client):
     msg_count = 0
-    for i in Indus_inflow:
+    val = random.choice(100, 500)
+    for i in range(25):
         #time.sleep(1)
         msg = f"messages: {msg_count}"
-        result = client.publish("Indus/outflow/sensor1", i)
+        if random.uniform(0,1) <= flood_chance:
+            val = val + 30
+        op = random.choice(["+", "-"])
+        val = val + random.uniform(1.9, 4.6)
+        if op == "-":
+            val = val - random.uniform(1, 4)
+        else:
+            val = val + random.uniform(1, 4)
+        result = client.publish("Indus/outflow/sensor1", val)
         # result: [0, 1]
         status = result[0]
         if status == 0:

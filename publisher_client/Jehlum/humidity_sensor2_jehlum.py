@@ -4,18 +4,16 @@ import asyncio
 import random
 import requests
 import logging
-import pandas as pd
 from aiocoap import *
 import datetime
 import aiocoap.resource as resource
 import aiocoap
 
+import datetime
 
+# link = "http://www.wapda.gov.pk/index.php/river-flow-data"
+# dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
 
-link = "http://www.wapda.gov.pk/index.php/river-flow-data"
-dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
-
-Indus_date = dfs[0][0]
 
 
 class Resource(resource.Resource):
@@ -39,20 +37,28 @@ logging.getLogger("coap-server").setLevel(logging.DEBUG)
 async def main():
     # Resource tree creation
     context = await Context.create_client_context()
-    for i in Indus_date:
-        i = str(i)
-        month = i[len(i)-3] + i[len(i)-2] + i[len(i)-1]
-        if month == 'Nov' or month == 'Dec' or month == 'Jan' or month == 'Feb':
-            temp = random.randint(37, 50)
-        if month == 'March' or month == 'April' or month == 'May':
-            temp = random.randint(33, 40)
-        if month == 'June' or month == 'July' or month == 'August':
-            temp = random.randint(34, 57)
-        if month == 'Sep' or month == 'Oct' or month == 'Nov':
-            temp = random.randint(42, 54)
+    today = datetime.datetime.now()
+    month = today.strftime("%b")
+    temp = 0
+    if month == 'Nov' or month == 'Dec' or month == 'Jan' or month == 'Feb':
+        temp = random.randint(37, 50)
+    if month == 'March' or month == 'April' or month == 'May':
+        temp = random.randint(33, 40)
+    if month == 'June' or month == 'July' or month == 'August':
+        temp = random.randint(34, 57)
+    if month == 'Sep' or month == 'Oct' or month == 'Nov':
+        temp = random.randint(42, 54)
+
+    for i in range(24):
+        rn = random.randint(1, 4)
+        c = random.choice(["increment", "decrement"])
+        if c == "increment":
+            temp = temp + rn
+        else:
+            temp = temp - rn
         data = "{}".format(temp)
         request = Message(code=POST, payload=data.encode("ascii"),
-                          uri='coap://localhost:5683/humidity_sensor2_jehlum')
+                          uri='coap://localhost:5683/Jehlum_humidity_sensor2')
         try:
             response = await context.request(request).response
             # print(response)

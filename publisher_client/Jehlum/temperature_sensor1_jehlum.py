@@ -4,32 +4,40 @@ import asyncio
 import random
 import requests
 
-import pandas as pd
+# import pandas as pd
 
 from aiocoap import *
 
-url = 'http://www.wapda.gov.pk/index.php/river-flow-data'
-link = "http://www.wapda.gov.pk/index.php/river-flow-data"
-dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
+# url = 'http://www.wapda.gov.pk/index.php/river-flow-data'
+# link = "http://www.wapda.gov.pk/index.php/river-flow-data"
+# dfs = pd.read_html(link, header=None, skiprows=4, index_col=None)
 
-Indus_date = dfs[0][0]
+# Indus_date = dfs[0][0]
+import datetime
 
 
 async def main():
     context = await Context.create_client_context()
-    for i in Indus_date:
-        i = str(i)
-        month = i[len(i)-3] + i[len(i)-2] + i[len(i)-1]
-        if month == 'Nov' or month == 'Dec' or month == 'Jan' or month == 'Feb':
-            temp = random.randint(-2, 16)
-        if month == 'March' or month == 'April' or month == 'May':
-            temp = random.randint(0, 21)
-        if month == 'June' or month == 'July' or month == 'August':
-            temp = random.randint(11, 30)
-        if month == 'Sep' or month == 'Oct' or month == 'Nov':
-            temp = random.randint(6, 28)
+    today = datetime.datetime.now()
+    month = today.strftime("%b")
+    temp = 0
+    if month == 'Nov' or month == 'Dec' or month == 'Jan' or month == 'Feb':
+        temp = random.randint(-2, 16)
+    if month == 'March' or month == 'April' or month == 'May':
+        temp = random.randint(0, 21)
+    if month == 'June' or month == 'July' or month == 'August':
+        temp = random.randint(11, 30)
+    if month == 'Sep' or month == 'Oct' or month == 'Nov':
+        temp = random.randint(6, 28)
+    for i in range(24):
+        rn = random.randint(1, 4)
+        c = random.choice(["increment", "decrement"])
+        if c == "increment":
+            temp = temp + rn
+        else:
+            temp = temp - rn
         data = "{}".format(temp)
-        request = Message(code=POST, payload=data.encode("ascii"), uri='coap://localhost:5683/temperature_sensor1_jehlum')
+        request = Message(code=POST, payload=data.encode("ascii"), uri='coap://localhost:5683/Jehlum_temperature_sensor1')
         try:
             response = await context.request(request).response
             # print(response)
