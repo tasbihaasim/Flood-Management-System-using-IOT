@@ -1,11 +1,15 @@
 version: "3"
 
 services:
+  pythonapp:
+    build: ./
+    command: python subscriber_server/mqtt_subscriber.py
+    ports:
+      - 1883:1883
 
   influxdb:
     restart: always
     image: influxdb:2.1.1
-    restart: on-failure:10
     ports:
       - 8086:8086
 
@@ -21,10 +25,5 @@ services:
     ports:
       - 3000:3000
 
-  mosquitto-container:
-    restart: always
-    image: eclipse-mosquitto
-    ports:
-      - 1883:1883
 
  

@@ -1,4 +1,4 @@
-'''For the temperature of city of Qambar'''
+
 # client_put.py
 import asyncio
 import random

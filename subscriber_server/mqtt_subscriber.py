@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt #import the client1
 import time
-Data = []
+con = False
 import influxdb_client, os, time
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -48,6 +48,7 @@ password = 'public'
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
+            con = True
             print("Connected to MQTT Broker!")
         else:
             print("Failed to connect, return code %d\n", rc)

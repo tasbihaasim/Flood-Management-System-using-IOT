@@ -42,7 +42,7 @@ def connect_mqtt():
 flood_chance = 0.2
 def publish(client):
     msg_count = 0
-    val = random.choice(50, 150)
+    val = random.choice((50, 150))
     for i in range(25):
         #time.sleep(1)
         msg = f"messages: {msg_count}"

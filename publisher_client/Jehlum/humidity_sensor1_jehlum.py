@@ -1,11 +1,11 @@
-'''For the temperature of city of Qambar'''
+
 # client_put.py
 import asyncio
 import random
 import requests
 
 # import pandas as pd
-import gateway
+
 from aiocoap import *
 import datetime
 
