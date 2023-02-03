@@ -17,8 +17,8 @@ from paho.mqtt import client as mqtt_client
 #            'Total Inflow Current Year (cfs)', 'Total Inflow Last Year (cfs)',
 #            'Total Inflow Average Last 10 Years (cfs)']
 
-
-broker = 'localhost'
+broker = 'broker.emqx.io'
+# broker = 'localhost'
 port = 1883
 topic = "Indus/outflow/sensor1"
 # generate client ID with pub prefix randomly

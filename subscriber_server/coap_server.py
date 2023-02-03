@@ -34,8 +34,7 @@ bucket2 = 'jehlum'
 write_api = client.write_api(write_options=SYNCHRONOUS)
 
 
-f = open('C:/Users/Tasbiha/Iot/rawdata.csv', 'w', newline='')
-writer = csv.writer(f)
+
 
 def collect_data(pay, r):
     arr = r.split("_")

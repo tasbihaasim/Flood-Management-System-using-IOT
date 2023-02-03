@@ -9,13 +9,13 @@ import random
 from paho.mqtt import client as mqtt_client
 import csv
 
-token_="GtEeLWZqA42o88CVxUQg2dvBqTduZuC-NXgBVMwqZX7pce1bWhmQzMEO8woGOpPdh1wWqWZBo4Jz0U-JhpxHnQ=="
-org_="anelyamend@gmail.com"
-url_="https://us-east-1-1.aws.cloud2.influxdata.com"
+# token_="GtEeLWZqA42o88CVxUQg2dvBqTduZuC-NXgBVMwqZX7pce1bWhmQzMEO8woGOpPdh1wWqWZBo4Jz0U-JhpxHnQ=="
+# org_="anelyamend@gmail.com"
+# url_="https://us-east-1-1.aws.cloud2.influxdata.com"
 
-# token_ = 'skVO0ckLCISprVeTI43CrtXCk1NSoJmlGQlN_X1FfpzOJ48c5JTatF4Tb3p-sRYtkaJ52vjFKCqcI5wrrpqGAg=='
-# org_ = "robelamare20@gmail.com"
-# url_ = "https://eu-central-1-1.aws.cloud2.influxdata.com"
+token_ = '9IFfacI50A4UWiarJhnycnAyAZ5dHrCzqEvsYqCRuXT1kqstVkJ-n_drPk5qkKF1Ojiz_vVhE_ApHfJ-PrmIGQ=='
+org_ = "robelamare20@gmail.com"
+url_ = "https://eu-central-1-1.aws.cloud2.influxdata.com"
 
 
 client = influxdb_client.InfluxDBClient(url=url_, token=token_, org=org_)
@@ -36,8 +36,8 @@ write_api = client.write_api(write_options=SYNCHRONOUS)
 # f = open('C:/Users/Tasbiha/Iot/rawdata.csv', 'a', newline='')
 # writer = csv.writer(f)
 
-# broker = 'broker.emqx.io'
-broker="localhost"
+broker = 'broker.emqx.io'
+#broker="localhost"
 port = 1883
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
