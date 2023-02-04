@@ -26,4 +26,11 @@ Launching data simulators; publishers and client for mqtt and coap protocol.
 ```
 python simulator.py
 ```
+Run the following to make prediction(forecast based on the recorded data)
+Terminal 4:
+Launching prediction; make sure to add the json config file as an argument like follows.
+python3 prediction.py config.json 
+```
+python prediction.py config.json
+```
 
