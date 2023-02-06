@@ -13,7 +13,9 @@ import csv
 # org_="anelyamend@gmail.com"
 # url_="https://us-east-1-1.aws.cloud2.influxdata.com"
 
-
+token_ = '9IFfacI50A4UWiarJhnycnAyAZ5dHrCzqEvsYqCRuXT1kqstVkJ-n_drPk5qkKF1Ojiz_vVhE_ApHfJ-PrmIGQ=='
+org_ = "robelamare20@gmail.com"
+url_ = "https://eu-central-1-1.aws.cloud2.influxdata.com"
 
 
 client = influxdb_client.InfluxDBClient(url=url_, token=token_, org=org_)
