@@ -112,8 +112,8 @@ def send_sms(predicted_list,threshold,bucket,sender,receiver):
     if any(x > threshold for x in predicted_list):
         
         # Your Account SID and Auth Token from twilio.com/console
-        account_sid = 'ACf1d2234126a93f26c77602db2ff27147'
-        auth_token = '37672d71f5670d565662f9621bdc27bd'
+        account_sid = 'ACc484e41550187a814f8223fc9c6b0d5f'
+        auth_token = 'de5730346c1129643f2bb99f756065e8'
         client = Client(account_sid, auth_token)
 
         #the below code gets triggered when a flood is predicted
