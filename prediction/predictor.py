@@ -164,7 +164,7 @@ if __name__ == '__main__':
                     predicted.append(float(predicted_output[i]))
                 print(predicted)   
                 write_prediction(predicted,key,json_data["threshold"][key])
-                #send_sms(predicted,json_data["threshold"][key],key,json_data["sms_sender"],json_data["sms_receiver"])
+                send_sms(predicted,json_data["threshold"][key],key,json_data["sms_sender"],json_data["sms_receiver"])
     except IndexError:
         print("No file name passed as an argument.")
     except FileNotFoundError:
